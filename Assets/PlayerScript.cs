@@ -31,7 +31,7 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] TextMeshProUGUI currentActionText;
     Coroutine powerRoutine, hAngleRoutine, vAngleRoutine, curveRoutine;
     float power, hAngle, vAngle, curve;
-    bool canThrow = true, throwing;
+    bool canThrow = true, throwing, throwOverride;
     [SerializeField] Slider powerSlider, hAngleSlider, vAngleSlider;
 
     //tick rates and change rates - tick rate is how often it increments, and change rate is how much it increments - max frames are how long it lingers on max power.
@@ -45,6 +45,9 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] FollowCamScript followCamActual;
     [SerializeField] Animator followCamAnim;
 
+    //movement speeds
+    [SerializeField] float xRotationSpeed, yRotationSpeed, xChangeAmount, yChangeAmount;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -54,19 +57,45 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (canThrow && Input.GetKeyDown(KeyCode.Space))
+        if (canThrow || throwOverride)
         {
-            if(powerRoutine == null)
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                powerRoutine = StartCoroutine(powerCoroutine());
+                if (powerRoutine == null)
+                {
+                    powerRoutine = StartCoroutine(powerCoroutine());
+                }
+                else if (powerRoutine != null)
+                {
+                    StopCoroutine(powerRoutine);
+                    powerRoutine = null;
+                    throwBowl();
+                }
             }
-            else if(powerRoutine != null)
+            if (Input.GetKey(KeyCode.W) && vAngleSlider.value > 0) //x is vert and y is horiz 'cause that's how it is on the rotations
             {
-                StopCoroutine(powerRoutine);
-                powerRoutine = null;
-                throwBowl();
+                transform.Rotate(new Vector3(xRotationSpeed * Time.deltaTime, 0, 0));
+                vAngleSlider.value -= xChangeAmount;
+            }
+            if (Input.GetKey(KeyCode.S) && vAngleSlider.value < 100)
+            {
+                transform.Rotate(new Vector3(-xRotationSpeed * Time.deltaTime, 0, 0));
+                vAngleSlider.value += xChangeAmount;
+            }
+            if (Input.GetKey(KeyCode.A) && hAngleSlider.value > 0)
+            {
+                transform.Rotate(new Vector3(0, -yRotationSpeed * Time.deltaTime, 0));
+                hAngleSlider.value -= yChangeAmount;
+            }
+            if (Input.GetKey(KeyCode.D) && hAngleSlider.value < 100)
+            {
+                transform.Rotate(new Vector3(0, yRotationSpeed * Time.deltaTime, 0));
+                hAngleSlider.value += yChangeAmount;
             }
         }
+
+
+
     }
 
     void throwBowl()
@@ -74,8 +103,8 @@ public class PlayerScript : MonoBehaviour
         canThrow = false;
         currentActionText.text = "BOWLED!!";
         anim.SetTrigger("thrown");
-        Rigidbody rb = Instantiate(bowl, throwPoint.position, Quaternion.identity).GetComponent<Rigidbody>();
-        rb.velocity = new Vector3(0, 0, powerSlider.value * powerMod);
+        Rigidbody rb = Instantiate(bowl, throwPoint.position, throwPoint.rotation).GetComponent<Rigidbody>();
+        rb.AddForce(rb.transform.forward * powerSlider.value * powerMod, ForceMode.Impulse);
         followCam.SetActive(true);
         followCamActual.target = rb.transform;
         followCamAnim.SetTrigger("go");
