@@ -4,6 +4,24 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+/*TODO:
+ * CURVE STUFF!!
+ * set canvases to world space
+ * player switch
+ * scoring/checking
+ * bubble popping
+ * trails/fx
+ * sound
+ * music
+ * AIGHT!!
+ * 
+ * 
+ */
+
+
+
+
+
 public class PlayerScript : MonoBehaviour
 {
     [SerializeField] Animator anim;
@@ -13,7 +31,7 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] TextMeshProUGUI currentActionText;
     Coroutine powerRoutine, hAngleRoutine, vAngleRoutine, curveRoutine;
     float power, hAngle, vAngle, curve;
-    bool throwing;
+    bool canThrow = true, throwing;
     [SerializeField] Slider powerSlider, hAngleSlider, vAngleSlider;
 
     //tick rates and change rates - tick rate is how often it increments, and change rate is how much it increments - max frames are how long it lingers on max power.
@@ -21,6 +39,11 @@ public class PlayerScript : MonoBehaviour
 
     //modifiers
     [SerializeField] float powerMod;
+
+    //follow cam
+    [SerializeField] GameObject followCam;
+    [SerializeField] FollowCamScript followCamActual;
+    [SerializeField] Animator followCamAnim;
 
     // Start is called before the first frame update
     void Start()
@@ -31,7 +54,7 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (canThrow && Input.GetKeyDown(KeyCode.Space))
         {
             if(powerRoutine == null)
             {
@@ -48,10 +71,15 @@ public class PlayerScript : MonoBehaviour
 
     void throwBowl()
     {
+        canThrow = false;
         currentActionText.text = "BOWLED!!";
         anim.SetTrigger("thrown");
         Rigidbody rb = Instantiate(bowl, throwPoint.position, Quaternion.identity).GetComponent<Rigidbody>();
         rb.velocity = new Vector3(0, 0, powerSlider.value * powerMod);
+        followCam.SetActive(true);
+        followCamActual.target = rb.transform;
+        followCamAnim.SetTrigger("go");
+        //once bowl has come to a rest reset canThrow
     }
 
     IEnumerator powerCoroutine() //look into making this generic? perhaps...
