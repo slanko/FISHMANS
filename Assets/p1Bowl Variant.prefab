@@ -11,6 +11,10 @@ PrefabInstance:
       propertyPath: playerNum
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 852811403, guid: 36308bcfcb7c3a94898f5178cf082e14, type: 3}
+      propertyPath: velMagCutoff
+      value: 0.98
+      objectReference: {fileID: 0}
     - target: {fileID: 8769906987040056, guid: 36308bcfcb7c3a94898f5178cf082e14, type: 3}
       propertyPath: m_Color.a
       value: 0.7058824

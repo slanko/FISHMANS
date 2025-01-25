@@ -61,11 +61,14 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] TextMeshProUGUI distText;
     BowlScript activeBowl;
     [SerializeField] GameObject shotUI, activeUI, winUI;
+    AudioSource aud;
+    [SerializeField] AudioClip whistle, goSound1, goSound2, goSound3;
 
     // Start is called before the first frame update
     void Start()
     {
         currentShotText.text = "SHOT " + currentShot;
+        aud = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -79,6 +82,7 @@ public class PlayerScript : MonoBehaviour
                 {
                     Debug.Log("setting power!");
                     powerRoutine = StartCoroutine(powerCoroutine());
+                    aud.PlayOneShot(goSound1);
                 }
                 else if (powerRoutine != null && curveRoutine == null)
                 {
@@ -86,6 +90,7 @@ public class PlayerScript : MonoBehaviour
                     StopCoroutine(powerRoutine);
                     powerRoutine = null;
                     curveRoutine = StartCoroutine(curveCoroutine());
+                    aud.PlayOneShot(goSound2);
                 }
                 else if (curveRoutine != null)
                 {
@@ -93,6 +98,7 @@ public class PlayerScript : MonoBehaviour
                     StopCoroutine(curveRoutine);
                     curveRoutine = null;
                     throwBowl();
+                    aud.PlayOneShot(goSound3);
                 }
             }
             if (canAim)
@@ -230,6 +236,7 @@ public class PlayerScript : MonoBehaviour
             currentShot++;
             currentShotText.text = "SHOT " + currentShot;
             currentActionText.text = "READY?";
+            aud.PlayOneShot(whistle);
         }
         else checkWinners();
 
