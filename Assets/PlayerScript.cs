@@ -63,6 +63,7 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] GameObject shotUI, activeUI, winUI;
     AudioSource aud;
     [SerializeField] AudioClip whistle, goSound1, goSound2, goSound3;
+    [SerializeField] TextMeshProUGUI distHeightText;
 
     // Start is called before the first frame update
     void Start()
@@ -126,6 +127,7 @@ public class PlayerScript : MonoBehaviour
             }
         }
         if (activeBowl != null) distText.text = activeBowl.myDist.ToString("0.00") + "m";
+        setDistText();
     }
 
     void throwBowl()
@@ -292,5 +294,11 @@ public class PlayerScript : MonoBehaviour
         activeUI.SetActive(false);
         winUI.SetActive(true);
 
+    }
+
+    void setDistText()
+    {
+        distHeightText.text = "TGT DIST:\n" + Vector3.Distance(transform.position, jack.position).ToString("0.00") +"m" + "\n" +
+            "TGT HEIGHT:\n" + jack.position.y.ToString("0.00") + "m";
     }
 }

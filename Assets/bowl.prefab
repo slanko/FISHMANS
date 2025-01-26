@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 2868287590982144560}
   - component: {fileID: 852811403}
   - component: {fileID: 4068928851758367209}
+  - component: {fileID: -4686227596200906359}
   m_Layer: 0
   m_Name: bowl
   m_TagString: Untagged
@@ -258,6 +259,7 @@ MonoBehaviour:
   playerNum: 0
   sleepFrames: 120
   sleepFrameCurrent: 0
+  myDist: 0
 --- !u!96 &4068928851758367209
 TrailRenderer:
   serializedVersion: 2
@@ -357,6 +359,23 @@ TrailRenderer:
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
   m_Emitting: 1
+--- !u!114 &-4686227596200906359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1621731841300320113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d33f65f067fbdde41b346771b7fa5ce2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myShadow: {fileID: 5385855731796547733, guid: 67983901b3387284789376b24a5c00ee,
+    type: 3}
+  layuh:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!1 &5425307686761183659
 GameObject:
   m_ObjectHideFlags: 0
